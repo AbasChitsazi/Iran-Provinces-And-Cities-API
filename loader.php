@@ -2,7 +2,7 @@
 
 
 define('Auth_Access', true);
-include_once "App/iran.php";
+
 
 spl_autoload_register(function ($class) {
     $classfile = __DIR__."/".$class.".php";

@@ -7,7 +7,20 @@ if(!defined('Auth_Access')){
 }
 
 
-class ProvinceServices extends BaseService
+class ProvinceServices extends BaseServices
 {
 
+        public function getAll()
+    {
+        $pdo = self::db();
+        $sql = "SELECT * FROM province";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll($pdo::FETCH_OBJ);
+    }
+
+    public function create($data)
+    {
+    
+    }
 }
