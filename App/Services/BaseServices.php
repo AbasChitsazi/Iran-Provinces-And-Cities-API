@@ -12,7 +12,6 @@ abstract class BaseServices{
     }
     abstract function getAll();
     abstract function create($data);
-    // abstract function findById($id);
-    // abstract function delete($id);
-    // abstract function update($id);
+    abstract function delete($id);
+    abstract function update($id,$name);
 }
