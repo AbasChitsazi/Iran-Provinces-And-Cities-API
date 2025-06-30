@@ -2,6 +2,11 @@
 
 namespace App\Config;
 
+if(!defined('Auth_Access')){
+    die("Access Denied");
+}
+
+
 use PDO;
 use PDOException;
 

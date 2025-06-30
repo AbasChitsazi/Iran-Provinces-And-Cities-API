@@ -28,11 +28,11 @@ class Response
     public static function SetHeaders($status_code)
     {
         header("Access-Control-Allow-Origin: *");
-        header("Cntent-Type: application/json; charset=UTF-8");
+        header("Content-Type: application/json; charset=UTF-8");
         header("Access-Control-Allow-Method: GET,PUT,POST,DELETE");
         header("Access-Control-Max-Age: 3600");
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-        header("HTTP 1/1 $status_code " . self::StatusText[$status_code]);
+        header("HTTP/1.1 $status_code " . self::StatusText[$status_code]);
     }
     public const HTTP_CONTINUE = 100;
     public const HTTP_SWITCHING_PROTOCOLS = 101;
