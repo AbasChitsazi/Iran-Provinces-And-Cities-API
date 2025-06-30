@@ -4,7 +4,6 @@ namespace App\Services;
 use App\Config\dbConnection;
 
 abstract class BaseServices{
-    protected $Primery_Key = "id";
     
     public static function db()
     {
