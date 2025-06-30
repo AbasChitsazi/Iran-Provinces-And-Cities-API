@@ -31,9 +31,13 @@ switch ($request_method) {
         }
 
         if($provinceservice->create($request_body)){
-            $row = $provinceservice::getrow($request_body['name']);
-            $cityservice->create(['province_id'=>$row->id,'name'=>$request_body['name']]);
-            Response::RespondeAndDie($request_body, Response::HTTP_CREATED);
+            $row = $provinceservice::getrowbyName($request_body['name']);
+            if($cityservice->create(['province_id'=>$row->id,'name'=>$request_body['name']])){
+                Response::RespondeAndDie($request_body, Response::HTTP_CREATED);
+            }else{
+                // DELETE PROVINCE WHEN CREATING CITY FAILED 
+            }
+
         }
         break;
     case 'DELETE':

@@ -65,7 +65,13 @@ class CityValidator
             self::$status_code = Response::HTTP_BAD_REQUEST;
             return false;
         }
-
+        if(CityServices::isCityExistbyName($data['name'],$data['province_id'])){
+            $province = ProvinceServices::getrowbyId($data['province_id']);
+            self::$message = "City With name {$data['name']} For Province {$province->name} Already Exist";
+            self::$status_code = Response::HTTP_CONFLICT;
+            return false;
+        }
+        
         $data['name'] = htmlspecialchars($data['name'], ENT_QUOTES, "UTF-8");
         return true;
     }

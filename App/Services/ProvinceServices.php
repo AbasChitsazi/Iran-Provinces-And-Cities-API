@@ -51,12 +51,20 @@ class ProvinceServices extends BaseServices
         $stmt->execute([$name]);
         return $stmt->fetchColumn() > 0;
     }
-    public static function getrow($data)
+    public static function getrowbyName($data)
     {
         $pdo = self::db();
         $sql = "SELECT * FROM province WHERE name = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$data]);
+        return $stmt->fetch($pdo::FETCH_OBJ);
+    }
+    public static function getrowbyId($id)
+    {
+        $pdo = self::db();
+        $sql = "SELECT * FROM province WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$id]);
         return $stmt->fetch($pdo::FETCH_OBJ);
     }
 }
