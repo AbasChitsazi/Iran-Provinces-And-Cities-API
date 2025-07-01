@@ -26,16 +26,17 @@ switch ($request_method) {
         Response::RespondeAndDie($response, Response::HTTP_OK);
         break;
     case 'POST':
-        if (!ProvinceValidator::validateProvince($request_body)) {
+        if (!ProvinceValidator::validateProvinceForCreate($request_body)) {
             Response::RespondeAndDie(ProvinceValidator::getMessage(), ProvinceValidator::getStatusCode());
         }
 
         if ($provinceservice->create($request_body)) {
-            $row = $provinceservice::getrowbyName($request_body['name']);
+            $row = ProvinceServices::getRow($request_body['name'],'name');
             if ($cityservice->create(['province_id' => $row->id, 'name' => $request_body['name']])) {
                 Response::RespondeAndDie($request_body, Response::HTTP_CREATED);
             } else {
-                // DELETE PROVINCE WHEN CREATING CITY FAILED 
+                $provinceservice::deleteRow($request_body['name'],'name');
+                Response::RespondeAndDie("Create Province Failed Please Try Again Later.",Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
         break;
@@ -51,23 +52,21 @@ switch ($request_method) {
             if (!ProvinceValidator::validationForDeleteProvince($request_data))
                 Response::RespondeAndDie(ProvinceValidator::getMessage(), ProvinceValidator::getStatusCode());
         }
-        $provinceservice->delete($request_data['province_id']);
-        $cityservice::deleteWithProvinceId($request_data['province_id']);
+        ProvinceServices::deleteRow($request_data['province_id']);
+        CityServices::deleteRow($request_data['province_id'],'province_id');
         Response::RespondeAndDie("Province With id {$request_data['province_id']} And All sub cities deleted successfully.", Response::HTTP_OK);
         break;
     case 'PUT':
         if (!ProvinceValidator::validationForUpdateProvince($request_body)) {
             Response::RespondeAndDie(ProvinceValidator::getMessage(), ProvinceValidator::getStatusCode());
         }
-        $city_data = $cityservice::getProvince($request_body['province_id']);
+        $city_data = ProvinceServices::getProvince($request_body['province_id']);
         if (!empty($city_data)) {
             $cityservice->update($city_data->id, $request_body['name']);
             $provinceservice->update($request_body['province_id'], $request_body['name']);
         }
 
-
         Response::RespondeAndDie("Province Name With id {$request_body['province_id']} Change successfully to {$request_body['name']}", Response::HTTP_OK);
-        break;
         break;
     default:
         Response::RespondeAndDie(['Invalid Request Method'], Response::HTTP_METHOD_NOT_ALLOWED);

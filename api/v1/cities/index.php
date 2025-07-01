@@ -55,7 +55,7 @@ switch ($request_method) {
                 Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
             
         }
-        $cityServices->delete($request_data['city_id']);
+        CityServices::deleteRow($request_data['city_id']);
         Response::RespondeAndDie("City With id {$request_data['city_id']} deleted successfully.", Response::HTTP_OK);
         break;
     case 'PUT':

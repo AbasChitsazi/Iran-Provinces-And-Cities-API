@@ -7,11 +7,13 @@ if (!defined('Auth_Access')) {
 }
 
 use PDOException;
+use InvalidArgumentException;
 use App\Libs\FileHandling;
 use App\Utilities\Response;
 
 class ProvinceServices extends BaseServices
 {
+    protected static $table = 'province';
 
     public  function getAll()
     {
@@ -35,19 +37,7 @@ class ProvinceServices extends BaseServices
             Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function delete($id)
-    {
-        try {
-            $pdo = self::db();
-            $sql = "DELETE  FROM province WHERE id = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$id]);
-            return $stmt->fetchColumn() > 0;
-        } catch (PDOException $e) {
-            FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
-            Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
+
     public function update($id, $name)
     {
         try {
@@ -61,56 +51,18 @@ class ProvinceServices extends BaseServices
             Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public static function isProvinceExistbyId($id)
+        public static function getProvince($id)
     {
         try {
             $pdo = self::db();
-            $sql = "SELECT COUNT(*) FROM province WHERE id = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$id]);
-            return $stmt->fetchColumn() > 0;
-        } catch (PDOException $e) {
-            FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
-            Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-    public static function isProvinceExistbyName($name)
-    {
-        try {
-            $pdo = self::db();
-            $sql = "SELECT COUNT(*) FROM province WHERE name = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$name]);
-            return $stmt->fetchColumn() > 0;
-        } catch (PDOException $e) {
-            FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
-            Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-    public static function getrowbyName($data)
-    {
-        try {
-            $pdo = self::db();
-            $sql = "SELECT * FROM province WHERE name = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$data]);
-            return $stmt->fetch($pdo::FETCH_OBJ);
-        } catch (PDOException $e) {
-            FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
-            Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-    public static function getrowbyId($id)
-    {
-        try {
-            $pdo = self::db();
-            $sql = "SELECT * FROM province WHERE id = ?";
+            $sql = "SELECT *  FROM city WHERE province_id = ? ORDER BY id ASC LIMIT 1";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return $stmt->fetch($pdo::FETCH_OBJ);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
             Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    
 }

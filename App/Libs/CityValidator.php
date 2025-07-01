@@ -19,7 +19,7 @@ class CityValidator
             self::$status_code = Response::HTTP_BAD_REQUEST;
             return false;
         }
-        $records =  CityServices::isCityExistWithProvinceid($data['province_id']);
+        $records =  CityServices::isExist($data['province_id'],'province_id');
         if (!$records) {
             self::$message = "city with province id {$data['province_id']} Not Exist!";
             self::$status_code = Response::HTTP_NOT_FOUND;
@@ -52,21 +52,21 @@ class CityValidator
         }
         if (!is_int($data['province_id']) || $data['province_id'] <= 0 || is_null($data['province_id'])) {
             self::$message = "Province id Must Be Number and Greater Than Zero";
-            self::$status_code = Response::HTTP_BAD_REQUEST;
+            self::$status_code = Response::HTTP_NOT_ACCEPTABLE;
             return false;
         }
-        if (!ProvinceServices::isProvinceExistbyId($data['province_id'])) {
+        if (!ProvinceServices::isExist($data['province_id'])) {
             self::$message = 'Province With this Province_id does not Exist!';
             self::$status_code = Response::HTTP_NOT_FOUND;
             return false;
         }
         if (!preg_match('/^[\p{Arabic}a-zA-Z\s]+$/u', $data['name']) || empty($data['name']) || mb_strlen($data['name']) < 2) {
             self::$message = "Name Must Be String and Atleaset 2 charcter";
-            self::$status_code = Response::HTTP_BAD_REQUEST;
+            self::$status_code = Response::HTTP_NOT_ACCEPTABLE;
             return false;
         }
-        if (CityServices::isCityExistbyName($data['name'], $data['province_id'])) {
-            $province = ProvinceServices::getrowbyId($data['province_id']);
+        if (CityServices::isCityExistByNameAndProvince($data['name'],$data['province_id'])) {
+            $province = ProvinceServices::getRow($data['province_id']);
             self::$message = "City With name {$data['name']} For Province {$province->name} Already Exist";
             self::$status_code = Response::HTTP_CONFLICT;
             return false;
@@ -80,10 +80,10 @@ class CityValidator
         $city_id = (int)$id['city_id'];
         if (!is_int($city_id) || $city_id == 0) {
             self::$message = "City_id Must Be Number And Greater Than Zero";
-            self::$status_code = Response::HTTP_BAD_REQUEST;
+            self::$status_code = Response::HTTP_NOT_ACCEPTABLE;
             return false;
         }
-        if (!CityServices::isCityExistById($city_id)) {
+        if (!CityServices::isExist($city_id)) {
             self::$message = "City With id {$city_id} Not Exist!";
             self::$status_code = Response::HTTP_NOT_FOUND;
             return false;
@@ -115,19 +115,25 @@ class CityValidator
         }
         if (!is_int($data['city_id']) || $data['city_id'] == 0 || is_null($data['city_id'])) {
             self::$message = "City_id Must Be Number And Greater Than Zero";
-            self::$status_code = Response::HTTP_BAD_REQUEST;
+            self::$status_code = Response::HTTP_NOT_ACCEPTABLE;
             return false;
         }
         if (!preg_match('/^[\p{Arabic}a-zA-Z\s]+$/u', $data['name']) || empty($data['name']) || mb_strlen($data['name']) < 2) {
             self::$message = "Name Must Be String and Atleaset 2 charcter";;
-            self::$status_code = Response::HTTP_BAD_REQUEST;
+            self::$status_code = Response::HTTP_NOT_ACCEPTABLE;
             return false;
         }
-        if(!CityServices::isCityExistById($data['city_id'])){
+        if(!CityServices::isExist($data['city_id'])){
             self::$message = "City With id {$data['city_id']} Not Exist!";
             self::$status_code = Response::HTTP_NOT_FOUND;
             return false;
         }
+        if(CityServices::getRow($data['city_id'])->name == $data['name']){
+            self::$message = "City With id {$data['city_id']} Alreay is {$data['name']}";
+            self::$status_code = Response::HTTP_CONFLICT;
+            return false;
+        }
+        $data['name'] = htmlspecialchars($data['name'], ENT_QUOTES, "UTF-8");
         return true;
     }
     public static function getMessage()
