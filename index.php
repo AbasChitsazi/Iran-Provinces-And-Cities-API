@@ -1,4 +1,5 @@
 <?php
 
 
-header("Location: api/v1/cities");
+header("Location: App/Docs/index.html");
+exit;

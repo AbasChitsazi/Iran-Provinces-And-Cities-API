@@ -17,19 +17,42 @@ class CityServices extends BaseServices
 {
     protected static $table = 'city';
 
-    public  function getAll($data = null)
-    {
-        $where = '';
-        $province_id = $data['province_id'] ?? null;
-        if (!is_null($province_id) && is_numeric($province_id)) {
-            $where = "WHERE province_id = {$province_id}";
-        }
-        $pdo = self::db();
-        $sql = "SELECT * FROM city $where";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll($pdo::FETCH_OBJ);
+    public function getAll($data = [])
+{
+    $params = [];
+    $where = '';
+    $limit = '';
+    
+    $province_id = $data['province_id'] ?? null;
+    $page = $data['page'] ?? null;
+    $pagesize = $data['pagesize'] ?? null;
+    $fields = $data['fields'];
+    $order_by = $data['order_by'] ?? null;
+    
+    if (!is_null($province_id) && is_numeric($province_id)) {
+        $where = "WHERE province_id = :province_id";
+        $params[':province_id'] = $province_id;
     }
+
+    if (!is_null($page) && is_numeric($page) && !is_null($pagesize) && is_numeric($pagesize)) {
+        $offset = $pagesize * ((int)$page - 1);
+        $limit = "LIMIT :offset, :pagesize";
+        $params[':offset'] = (int)$offset;
+        $params[':pagesize'] = (int)$pagesize;
+    }
+    
+    $pdo = self::db();
+    $sql = "SELECT $fields FROM city $where $order_by $limit";
+    $stmt = $pdo->prepare($sql);
+
+    foreach ($params as $key => $value) {
+        $param_type = is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR;
+        $stmt->bindValue($key, $value, $param_type);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll($pdo::FETCH_OBJ);
+}
     public function create($data)
     {
         try {
@@ -69,5 +92,14 @@ class CityServices extends BaseServices
             FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
             Response::RespondeAndDie("Please Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+    public static function getColumns()
+    {
+        $pdo = self::db();
+        $sql = "SELECT COLUMN_NAME FROM information_schema.columns where table_name = '" . self::$table . "'" ;
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        
     }
 }
