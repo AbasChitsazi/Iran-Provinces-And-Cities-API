@@ -10,7 +10,7 @@ class FileHandling
         if (!file_exists($file_name)) {
             mkdir($file_name, 0777, true);
         }
-        $final_filename = $file_name . "/error.log.txt";
+        $final_filename = $file_name . "/Exception.Log.txt";
         $final_msg = $message . " in File => " . $file . " in line: " . $line ." at ". date('F j, Y, g:i a',time()). PHP_EOL;
         file_put_contents($final_filename, $final_msg, FILE_APPEND);
     }

@@ -6,6 +6,7 @@ use App\Libs\ProvinceValidator;
 use App\Services\ProvinceServices;
 use App\Services\CityServices;
 use App\Utilities\Response;
+use App\Utilities\CacheUtility;
 
 
 
@@ -19,11 +20,13 @@ $cityservice = new CityServices();
 
 switch ($request_method) {
     case 'GET':
+        CacheUtility::start();
         $response = $provinceservice->getAll();
         if (empty($response)) {
             Response::RespondeAndDie('', Response::HTTP_NOT_FOUND);
         }
-        Response::RespondeAndDie($response, Response::HTTP_OK);
+        echo Response::responde($response, Response::HTTP_OK);
+        CacheUtility::end();
         break;
     case 'POST':
         if (!ProvinceValidator::validateProvinceForCreate($request_body)) {
@@ -33,6 +36,7 @@ switch ($request_method) {
         if ($provinceservice->create($request_body)) {
             $row = ProvinceServices::getRow($request_body['name'],'name');
             if ($cityservice->create(['province_id' => $row->id, 'name' => $request_body['name']])) {
+                CacheUtility::flush();
                 Response::RespondeAndDie($request_body, Response::HTTP_CREATED);
             } else {
                 $provinceservice::deleteRow($request_body['name'],'name');
@@ -52,9 +56,10 @@ switch ($request_method) {
             if (!ProvinceValidator::validationForDeleteProvince($request_data))
                 Response::RespondeAndDie(ProvinceValidator::getMessage(), ProvinceValidator::getStatusCode());
         }
-        ProvinceServices::deleteRow($request_data['province_id']);
-        CityServices::deleteRow($request_data['province_id'],'province_id');
-        Response::RespondeAndDie("Province With id {$request_data['province_id']} And All sub cities deleted successfully.", Response::HTTP_OK);
+        if(ProvinceServices::deleteRow($request_data['province_id']) && CityServices::deleteRow($request_data['province_id'],'province_id')){
+                CacheUtility::flush();
+                Response::RespondeAndDie("Province With id {$request_data['province_id']} And All sub cities deleted successfully.", Response::HTTP_OK);
+        }
         break;
     case 'PUT':
         if (!ProvinceValidator::validationForUpdateProvince($request_body)) {
@@ -64,6 +69,7 @@ switch ($request_method) {
         if (!empty($city_data)) {
             $cityservice->update($city_data->id, $request_body['name']);
             $provinceservice->update($request_body['province_id'], $request_body['name']);
+            CacheUtility::flush();
         }
 
         Response::RespondeAndDie("Province Name With id {$request_body['province_id']} Change successfully to {$request_body['name']}", Response::HTTP_OK);

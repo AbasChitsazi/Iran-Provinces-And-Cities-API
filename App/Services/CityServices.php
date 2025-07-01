@@ -40,9 +40,9 @@ class CityServices extends BaseServices
         $params[':offset'] = (int)$offset;
         $params[':pagesize'] = (int)$pagesize;
     }
-    
+    try{
     $pdo = self::db();
-    $sql = "SELECT $fields FROM city $where $order_by $limit";
+    $sql = "SELECT $fields FROM ". self::$table ." $where $order_by $limit";
     $stmt = $pdo->prepare($sql);
 
     foreach ($params as $key => $value) {
@@ -52,12 +52,17 @@ class CityServices extends BaseServices
 
     $stmt->execute();
     return $stmt->fetchAll($pdo::FETCH_OBJ);
+    }
+    catch(PDOException $e){
+        FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
+        Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 }
     public function create($data)
     {
         try {
             $pdo = self::db();
-            $sql = "INSERT INTO city (province_id,name) VALUES(?,?)";
+            $sql = "INSERT INTO  ". self::$table ."  (province_id,name) VALUES(?,?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$data['province_id'], $data['name']]);
             return $stmt->rowCount();
@@ -70,7 +75,7 @@ class CityServices extends BaseServices
     {
         try {
             $pdo = self::db();
-            $sql = "UPDATE city SET name = ? WHERE id = ?";
+            $sql = "UPDATE  ". self::$table ."  SET name = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$name, $id]);
             return $stmt->rowCount();
@@ -84,7 +89,7 @@ class CityServices extends BaseServices
     {
         try {
             $pdo = self::db();
-            $sql = "SELECT COUNT(*) FROM city WHERE name = ? AND province_id = ?";
+            $sql = "SELECT COUNT(*) FROM  ". self::$table ."  WHERE name = ? AND province_id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$name, $province_id]);
             return $stmt->fetchColumn() > 0;

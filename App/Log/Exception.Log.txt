@@ -1,0 +1,3 @@
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'iran.citwy' doesn't exist in File => C:\xampp\htdocs\api.local\App\Services\CityServices.php in line: 57 at July 1, 2025, 11:05 pm
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'iran.citwy' doesn't exist in File => C:\xampp\htdocs\api.local\App\Services\CityServices.php in line: 57 at July 1, 2025, 11:05 pm
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'iran.citwy' doesn't exist in File => C:\xampp\htdocs\api.local\App\Services\CityServices.php in line: 57 at July 1, 2025, 11:05 pm

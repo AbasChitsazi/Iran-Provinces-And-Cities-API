@@ -2,6 +2,8 @@
 
 
 define('Auth_Access', true);
+define('CACHE_DIR',__DIR__."/cache/");
+define('CACHE_ENABLED',1);
 
 
 spl_autoload_register(function ($class) {

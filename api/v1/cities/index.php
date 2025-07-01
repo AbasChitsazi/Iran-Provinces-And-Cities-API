@@ -7,6 +7,11 @@ include_once __DIR__ . "/../../../loader.php";
 use App\Services\CityServices;
 use App\Utilities\Response;
 use App\Libs\CityValidator;
+use App\Utilities\CacheUtility;
+
+
+
+
 
 $Response = new Response();
 $cityServices = new CityServices();
@@ -19,31 +24,35 @@ $request_body = json_decode(file_get_contents('php://input'), true);
 
 switch ($request_method) {
     case 'GET':
-    $province_id = $_GET['province_id'] ?? null;
-    $page = $_GET['page'] ?? null;
-    $pagesize = $_GET['pagesize'] ?? null;
-    $fields = $_GET['fields'] ?? '*';
-    $order_by = $_GET['order_by'] ?? null ;
+        CacheUtility::start();
+        $province_id = $_GET['province_id'] ?? null;
+        $page = $_GET['page'] ?? null;
+        $pagesize = $_GET['pagesize'] ?? null;
+        $fields = $_GET['fields'] ?? '*';
+        $order_by = $_GET['order_by'] ?? null;
 
-    $request_data = compact('province_id', 'page', 'pagesize','fields','order_by');
+        $request_data = compact('province_id', 'page', 'pagesize', 'fields', 'order_by');
 
-    if (!CityValidator::isValidParameter($request_data)) {
-        Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
-    }
-    
-    $response = $cityServices->getAll($request_data);
+        if (!CityValidator::isValidParameter($request_data)) {
+            Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
+        }
 
-    if (empty($response))
-        Response::RespondeAndDie('', Response::HTTP_NOT_FOUND);
+        $response = $cityServices->getAll($request_data);
 
-    Response::RespondeAndDie($response, Response::HTTP_OK);
+        if (empty($response))
+            Response::RespondeAndDie('', Response::HTTP_NOT_FOUND);
+
+        echo Response::responde($response, Response::HTTP_OK);
+        CacheUtility::end();
         break;
     case 'POST':
         if (!CityValidator::validateCityData($request_body))
             Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
 
-        $cityServices->create($request_body);
-        Response::RespondeAndDie($request_body, Response::HTTP_CREATED);
+        if($cityServices->create($request_body)){
+            CacheUtility::flush();
+            Response::RespondeAndDie($request_body, Response::HTTP_CREATED);
+        }
 
         break;
     case 'DELETE':
@@ -58,15 +67,19 @@ switch ($request_method) {
             if (!CityValidator::validationForDeleteCity($request_data))
                 Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
         }
-        CityServices::deleteRow($request_data['city_id']);
-        Response::RespondeAndDie("City With id {$request_data['city_id']} deleted successfully.", Response::HTTP_OK);
+        if(CityServices::deleteRow($request_data['city_id'])){
+            CacheUtility::flush();
+            Response::RespondeAndDie("City With id {$request_data['city_id']} deleted successfully.", Response::HTTP_OK);
+        }
         break;
     case 'PUT':
         if (!CityValidator::validationForUpdateCity($request_body)) {
             Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
         }
-        $cityServices->update($request_body['city_id'], $request_body['name']);
-        Response::RespondeAndDie("City Name With id {$request_body['city_id']} Change successfully to {$request_body['name']}", Response::HTTP_OK);
+        if($cityServices->update($request_body['city_id'], $request_body['name'])){
+            CacheUtility::flush();
+            Response::RespondeAndDie("City Name With id {$request_body['city_id']} Change successfully to {$request_body['name']}", Response::HTTP_OK);
+        }
         break;
     default:
         Response::RespondeAndDie(['Invalid Request Method'], Response::HTTP_METHOD_NOT_ALLOWED);

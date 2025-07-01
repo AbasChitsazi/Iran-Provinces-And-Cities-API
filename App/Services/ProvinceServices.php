@@ -7,7 +7,6 @@ if (!defined('Auth_Access')) {
 }
 
 use PDOException;
-use InvalidArgumentException;
 use App\Libs\FileHandling;
 use App\Utilities\Response;
 
@@ -18,7 +17,7 @@ class ProvinceServices extends BaseServices
     public  function getAll()
     {
         $pdo = self::db();
-        $sql = "SELECT * FROM province";
+        $sql = "SELECT * FROM  ". self::$table ." ";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll($pdo::FETCH_OBJ);
@@ -28,7 +27,7 @@ class ProvinceServices extends BaseServices
     {
         try {
             $pdo = self::db();
-            $sql = "INSERT INTO province (name) VALUES(?)";
+            $sql = "INSERT INTO  ". self::$table ."  (name) VALUES(?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$data['name']]);
             return $stmt->rowCount();
@@ -42,7 +41,7 @@ class ProvinceServices extends BaseServices
     {
         try {
             $pdo = self::db();
-            $sql = "UPDATE province SET name = ? WHERE id = ?";
+            $sql = "UPDATE  ". self::$table ."  SET name = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$name, $id]);
             return $stmt->rowCount();
@@ -55,7 +54,7 @@ class ProvinceServices extends BaseServices
     {
         try {
             $pdo = self::db();
-            $sql = "SELECT *  FROM city WHERE province_id = ? ORDER BY id ASC LIMIT 1";
+            $sql = "SELECT *  FROM  ". CityServices::$table ."  WHERE province_id = ? ORDER BY id ASC LIMIT 1";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return $stmt->fetch($pdo::FETCH_OBJ);
