@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستندات جامع پروژه Iran Provinces & Cities API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazir', Tahoma, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 16px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border-radius: 12px;
+            padding: 40px 24px 32px 24px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.7em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        .toc {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            padding: 24px 24px 16px 24px;
+            margin-bottom: 32px;
+        }
+        .toc h2 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+        .toc li {
+            margin: 8px 0;
+        }
+        .toc a {
+            color: #764ba2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .section {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            padding: 32px 24px;
+            margin-bottom: 32px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.7em;
+        }
+        .section h3 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.2em;
+        }
+        .code-block, .url, code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 12px 0;
+            overflow-x: auto;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.98em;
+        }
+        .url {
+            background: #764ba2;
+            color: #fff;
+            margin: 10px 0;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px 8px;
+            text-align: right;
+        }
+        .table th {
+            background-color: #764ba2;
+            color: #fff;
+        }
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .note, .warning, .success {
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 1em;
+        }
+        .note {
+            background: #e3f2fd;
+            color: #0d47a1;
+            border: 1px solid #90caf9;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #764ba2;
+            padding: 18px 18px 12px 18px;
+            margin: 18px 0;
+            border-radius: 5px;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .get { background-color: #28a745; }
+        .post { background-color: #007bff; }
+        .put { background-color: #ffc107; color: #212529; }
+        .delete { background-color: #dc3545; }
+        .footer {
+            text-align: center;
+            color: #888;
+            font-size: 0.95em;
+            margin: 32px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 مستندات جامع Iran Provinces & Cities API</h1>
+        <p>API مدیریت استان‌ها و شهرهای ایران<br>نسخه: 1.0 | زبان: PHP | پایگاه داده: MySQL</p>
+    </div>
+    <div class="toc">
+        <h2>فهرست مطالب</h2>
+        <ul>
+            <li><a href="#overview">معرفی کلی پروژه</a></li>
+            <li><a href="#structure">ساختار پوشه‌ها و فایل‌ها</a></li>
+            <li><a href="#config">تنظیمات و پیکربندی</a></li>
+            <li><a href="#database">ساختار پایگاه داده</a></li>
+            <li><a href="#auth">احراز هویت و دسترسی</a></li>
+            <li><a href="#api">مستندات کامل API</a></li>
+            <li><a href="#validation">قوانین اعتبارسنجی</a></li>
+            <li><a href="#services">سرویس‌ها و منطق تجاری</a></li>
+            <li><a href="#utilities">ابزارهای کمکی و کش</a></li>
+            <li><a href="#logging">لاگ‌گیری و مدیریت خطا</a></li>
+            <li><a href="#examples">مثال‌های کاربردی</a></li>
+            <li><a href="#dev">نکات توسعه و نگهداری</a></li>
+            <li><a href="#support">پشتیبانی</a></li>
+        </ul>
+    </div>
+    <div class="section" id="overview">
+        <h2>🔍 معرفی کلی پروژه</h2>
+        <p>
+            این پروژه یک <b>RESTful API</b> برای مدیریت استان‌ها و شهرهای ایران است که با زبان <b>PHP</b> و پایگاه داده <b>MySQL</b> پیاده‌سازی شده است.<br>
+            هدف این API، ارائه سرویس‌های CRUD (ایجاد، خواندن، ویرایش، حذف) برای دو موجودیت اصلی <b>استان</b> و <b>شهر</b> می‌باشد.<br>
+            این پروژه مناسب استفاده در سامانه‌های اطلاعات جغرافیایی، فرم‌های ثبت‌نام، پنل‌های مدیریتی و هر کاربردی است که نیاز به اطلاعات ساختاریافته استان و شهر ایران دارد.
+        </p>
+        <div class="success">
+            <b>ویژگی‌های کلیدی:</b>
+            <ul style="margin-top: 10px; margin-right: 20px;">
+                <li>پشتیبانی کامل از عملیات CRUD برای استان و شهر</li>
+                <li>اعتبارسنجی دقیق داده‌ها و جلوگیری از ورود اطلاعات نامعتبر</li>
+                <li>پاسخ‌دهی استاندارد و ساختارمند (JSON)</li>
+                <li>مدیریت سطح دسترسی و احراز هویت با JWT</li>
+                <li>لاگ‌گیری خطاها و مدیریت Exceptionها</li>
+                <li>امکان کش کردن پاسخ‌ها برای بهبود سرعت</li>
+                <li>کد تمیز و ساختارمند با قابلیت توسعه آسان</li>
+            </ul>
+        </div>
+        <div class="note">
+            <b>تکنولوژی‌ها و ابزارهای استفاده شده:</b><br>
+            PHP 8+, MySQL, PDO, JWT (firebase/php-jwt), HTML/CSS, Composer
+        </div>
+        <div class="note">
+            <b>معماری پروژه:</b><br>
+            پروژه به صورت ماژولار و لایه‌ای طراحی شده است و هر بخش (API, سرویس‌ها، اعتبارسنجی، ابزارها و ...) در پوشه جداگانه قرار دارد.
+        </div>
+    </div>
+    <div class="section" id="structure">
+        <h2>📁 ساختار پوشه‌ها و فایل‌ها</h2>
+        <p>
+            ساختار پروژه به صورت ماژولار و لایه‌ای طراحی شده است. در ادامه نقش هر پوشه و فایل مهم توضیح داده می‌شود:
+        </p>
+        <div class="code-block" style="direction:ltr;text-align:left">
+api.local/
+├── api/
+│   └── v1/
+│       ├── provinces/
+│       │   └── index.php
+│       ├── cities/
+│       │   └── index.php
+│       └── get-api-key.php
+├── App/
+│   ├── Config/
+│   │   └── dbConnection.php
+│   ├── Docs/
+│   │   └── index.html (همین مستندات)
+│   ├── Libs/
+│   │   ├── CityValidator.php
+│   │   ├── ProvinceValidator.php
+│   │   ├── UserValidator.php
+│   │   └── FileHandling.php
+│   ├── Log/
+│   │   └── Exception.Log.txt
+│   ├── Services/
+│   │   ├── BaseServices.php
+│   │   ├── CityServices.php
+│   │   └── ProvinceServices.php
+│   ├── Utilities/
+│   │   ├── CacheUtility.php
+│   │   └── Response.php
+│   ├── sql/
+│   │   └── iran.sql
+│   └── cache/ (پوشه کش)
+├── index.php
+├── loader.php
+├── composer.json
+├── composer.lock
+└── vendor/
+        </div>
+        <table class="table">
+            <tr><th>پوشه/فایل</th><th>توضیح</th></tr>
+            <tr><td><b>api/v1/</b></td><td>شامل endpointهای نسخه 1 API برای استان و شهر و دریافت کلید API</td></tr>
+            <tr><td>provinces/index.php</td><td>منطق و کنترلر endpoint استان‌ها (CRUD)</td></tr>
+            <tr><td>cities/index.php</td><td>منطق و کنترلر endpoint شهرها (CRUD)</td></tr>
+            <tr><td>get-api-key.php</td><td>صفحه دریافت کلید API (JWT) برای تست و توسعه</td></tr>
+            <tr><td><b>App/Config/</b></td><td>تنظیمات و اتصال به دیتابیس</td></tr>
+            <tr><td>dbConnection.php</td><td>کلاس مدیریت اتصال PDO به MySQL</td></tr>
+            <tr><td><b>App/Libs/</b></td><td>کلاس‌های اعتبارسنجی و ابزارهای کمکی</td></tr>
+            <tr><td>CityValidator.php</td><td>اعتبارسنجی داده‌های شهر و پارامترهای ورودی</td></tr>
+            <tr><td>ProvinceValidator.php</td><td>اعتبارسنجی داده‌های استان و پارامترهای ورودی</td></tr>
+            <tr><td>UserValidator.php</td><td>مدیریت کاربران تستی و توکن JWT</td></tr>
+            <tr><td>FileHandling.php</td><td>ابزار ثبت لاگ خطاها در فایل</td></tr>
+            <tr><td><b>App/Services/</b></td><td>منطق تجاری و ارتباط با دیتابیس برای استان و شهر</td></tr>
+            <tr><td>BaseServices.php</td><td>کلاس پایه سرویس‌ها (متدهای مشترک)</td></tr>
+            <tr><td>CityServices.php</td><td>سرویس مدیریت شهرها (CRUD و جستجو)</td></tr>
+            <tr><td>ProvinceServices.php</td><td>سرویس مدیریت استان‌ها (CRUD و جستجو)</td></tr>
+            <tr><td><b>App/Utilities/</b></td><td>ابزارهای کمکی برای کش و پاسخ‌دهی</td></tr>
+            <tr><td>CacheUtility.php</td><td>مدیریت کش پاسخ‌های GET</td></tr>
+            <tr><td>Response.php</td><td>ساختار و مدیریت پاسخ‌های استاندارد API</td></tr>
+            <tr><td><b>App/Log/</b></td><td>فایل لاگ خطاها</td></tr>
+            <tr><td>Exception.Log.txt</td><td>ثبت خطاهای رخ‌داده در پروژه</td></tr>
+            <tr><td><b>App/sql/</b></td><td>اسکریپت ساخت و داده اولیه دیتابیس</td></tr>
+            <tr><td>iran.sql</td><td>ساختار و داده کامل استان‌ها و شهرهای ایران</td></tr>
+            <tr><td><b>App/cache/</b></td><td>پوشه ذخیره کش پاسخ‌ها (توسط سیستم)</td></tr>
+            <tr><td><b>App/Docs/</b></td><td>مستندات پروژه (همین فایل)</td></tr>
+            <tr><td><b>index.php</b></td><td>ورودی اصلی پروژه (ریدایرکت به مستندات)</td></tr>
+            <tr><td><b>loader.php</b></td><td>لودر و اتولودر کلاس‌ها و تعریف ثابت‌ها</td></tr>
+            <tr><td><b>composer.json</b></td><td>مدیریت وابستگی‌ها و پکیج‌های PHP</td></tr>
+            <tr><td><b>vendor/</b></td><td>پکیج‌های نصب‌شده توسط Composer</td></tr>
+        </table>
+        <div class="note">
+            <b>نکته:</b> هر بخش از پروژه به صورت مجزا و قابل توسعه طراحی شده است و افزودن قابلیت‌های جدید به سادگی امکان‌پذیر است.
+        </div>
+    </div>
+    <div class="section" id="config">
+        <h2>⚙️ تنظیمات و پیکربندی</h2>
+        <p>
+            تنظیمات اصلی پروژه شامل اتصال به دیتابیس، تعریف ثابت‌های کلیدی و autoload کلاس‌ها است. این تنظیمات در فایل‌های <b>loader.php</b> و <b>App/Config/dbConnection.php</b> قرار دارند.
+        </p>
+        <h3>ثابت‌های مهم در <code>loader.php</code>:</h3>
+        <div class="code-block">
+// ...
+define('Auth_Access', true); // کنترل دسترسی داخلی
+define('CACHE_DIR',__DIR__."/App/cache/"); // مسیر کش
+define("BASE_PATH",__DIR__);
+define('BASE_URL',$_SERVER['HTTP_HOST']);
+define('CACHE_ENABLED',0); // فعال/غیرفعال بودن کش
+// کلید و الگوریتم JWT
+define('JWT_SECRET','...');
+define('JWT_ALG','HS256');
+// ...
+        </div>
+        <h3>اتولودر کلاس‌ها:</h3>
+        <div class="code-block">
+spl_autoload_register(function ($class) {
+    $classfile = __DIR__."/".$class.".php";
+    $classfile = str_replace("\\","/",$classfile);
+    if(!(file_exists($classfile) && is_readable($classfile)))
+        die("Class $classfile Not Found");
+    require $classfile;
+});
+        </div>
+        <h3>اتصال به دیتابیس (<code>App/Config/dbConnection.php</code>):</h3>
+        <div class="code-block">
+class dbConnection {
+    private static ?PDO $pdo = null;
+    public static function getConnection(): PDO {
+        if (self::$pdo === null) {
+            $dsn = "mysql:host=localhost;dbname=iran;charset=utf8mb4";
+            self::$pdo = new PDO($dsn, 'root', '');
+        }
+        return self::$pdo;
+    }
+}
+        </div>
+        <div class="note">
+            <b>نکته امنیتی:</b> برای محیط عملیاتی، حتماً نام کاربری و رمز عبور دیتابیس را امن و غیر از root قرار دهید.
+        </div>
+        <h3>وابستگی‌ها (<code>composer.json</code>):</h3>
+        <div class="code-block" style="direction:ltr;text-align:left">
+{
+    "require": {
+        "firebase/php-jwt": "^6.11"
+    }
+}
+        </div>
+        <div class="note">
+            <b>نصب وابستگی‌ها:</b> با اجرای <code>composer install</code> در ریشه پروژه، پکیج‌های مورد نیاز نصب می‌شوند.
+        </div>
+    </div>
+    <div class="section" id="database">
+        <h2>🗄️ ساختار پایگاه داده</h2>
+        <p>
+            پایگاه داده پروژه شامل دو جدول اصلی <b>province</b> و <b>city</b> است که اطلاعات استان‌ها و شهرهای ایران را نگهداری می‌کند. ساختار و داده اولیه این جداول در فایل <code>App/sql/iran.sql</code> قرار دارد.
+        </p>
+        <h3>جدول <code>province</code>:</h3>
+        <table class="table">
+            <tr><th>ستون</th><th>نوع</th><th>توضیح</th></tr>
+            <tr><td>id</td><td>int(12) UNSIGNED</td><td>شناسه یکتا (Primary Key)</td></tr>
+            <tr><td>name</td><td>varchar(200)</td><td>نام استان</td></tr>
+        </table>
+        <h3>جدول <code>city</code>:</h3>
+        <table class="table">
+            <tr><th>ستون</th><th>نوع</th><th>توضیح</th></tr>
+            <tr><td>id</td><td>int(12) UNSIGNED</td><td>شناسه یکتا (Primary Key)</td></tr>
+            <tr><td>province_id</td><td>int(12) UNSIGNED</td><td>شناسه استان (Foreign Key)</td></tr>
+            <tr><td>name</td><td>varchar(200)</td><td>نام شهر</td></tr>
+        </table>
+        <div class="note">
+            <b>نکته:</b> جدول <code>city</code> با <code>province_id</code> به جدول استان‌ها متصل است و حذف یک استان، تمام شهرهای وابسته به آن را نیز حذف می‌کند.
+        </div>
+        <h3>نمونه داده اولیه (بخشی از iran.sql):</h3>
+        <div class="code-block" style="direction:ltr;text-align:left">
+CREATE TABLE `province` (
+  `id` int(12) UNSIGNED NOT NULL,
+  `name` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `city` (
+  `id` int(12) UNSIGNED NOT NULL,
+  `province_id` int(12) UNSIGNED NOT NULL,
+  `name` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `province` (`id`, `name`) VALUES
+(1, 'آذربایجان شرقی'),
+(2, 'آذربایجان غربی'),
+(3, 'اردبیل'),
+...;
+
+INSERT INTO `city` (`id`, `province_id`, `name`) VALUES
+(1, 1, 'تبریز'),
+(2, 1, 'کندوان'),
+(3, 2, 'ارومیه'),
+...;
+        </div>
+        <div class="note">
+            <b>نکته توسعه:</b> برای بارگذاری داده اولیه، کافی است فایل iran.sql را در دیتابیس MySQL خود ایمپورت کنید.
+        </div>
+    </div>
+    <div class="section" id="auth">
+        <h2>🔐 احراز هویت و دسترسی</h2>
+        <p>
+            این پروژه برای امنیت و کنترل دسترسی از <b>JWT (JSON Web Token)</b> استفاده می‌کند. هر درخواست به endpointهای اصلی باید دارای توکن معتبر باشد.
+        </p>
+        <h3>دریافت توکن API:</h3>
+        <ul>
+            <li>برای دریافت توکن، به <code>/api/v1/get-api-key.php</code> مراجعه و ایمیل کاربر تستی را وارد کنید.</li>
+            <li>پس از دریافت توکن، آن را در هدر <code>Authorization: Bearer &lt;token&gt;</code> قرار دهید.</li>
+        </ul>
+        <h3>ساختار کاربران تستی (UserValidator.php):</h3>
+        <div class="code-block">
+public static function Users():array{
+    return  [
+        (object)['id' => 1,'username' => 'admin','email' => 'chitsazi3@gmail.com','role' => 'admin','allowed_province' => []],
+        (object)['id' => 2,'username' => 'ali','email' => 'user2@gmail.com','role' => 'president','allowed_province' => [1,2,3]],
+        (object)['id' => 3,'username' => 'sara','email' => 'user3@gmail.com','role' => 'Mayor','allowed_province' => [20,22,25]]
+    ];
+}
+        </div>
+        <table class="table">
+            <tr><th>نقش</th><th>دسترسی</th></tr>
+            <tr><td>admin</td><td>دسترسی کامل به همه استان‌ها و شهرها</td></tr>
+            <tr><td>president</td><td>دسترسی کامل به همه استان‌ها و شهرها</td></tr>
+            <tr><td>Mayor</td><td>دسترسی فقط به استان‌های مجاز (allowed_province)</td></tr>
+        </table>
+        <h3>نمونه هدر درخواست:</h3>
+        <div class="code-block" style="direction:ltr;text-align:left">
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+        </div>
+        <div class="note">
+            <b>نکته امنیتی:</b> بدون توکن معتبر، هیچ درخواست به endpointهای اصلی (استان/شهر) پذیرفته نمی‌شود و خطای 401 بازگردانده خواهد شد.
+        </div>
+    </div>
+    <div class="section" id="api">
+        <h2>🌐 مستندات کامل API</h2>
+        <p>
+            در این بخش، endpointهای اصلی برای مدیریت استان و شهر به همراه ورودی، خروجی، مثال و خطاها توضیح داده شده است.
+        </p>
+        <h3>استان‌ها (<code>/api/v1/provinces</code>)</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <div class="url">/api/v1/provinces</div>
+            <p>دریافت لیست تمام استان‌ها (نیازمند توکن)</p>
+            <div class="code-block">curl -H "Authorization: Bearer &lt;token&gt;" http://api.local/api/v1/provinces</div>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">[
+  {"id": 1, "name": "آذربایجان شرقی"},
+  {"id": 2, "name": "آذربایجان غربی"},
+  ...
+]</div>
+        </div>
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <div class="url">/api/v1/provinces</div>
+            <p>ایجاد استان جدید (نیازمند توکن admin/president)</p>
+            <div class="code-block">{
+  "name": "نام استان"
+}</div>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">{
+  "http_status": 201,
+  "http_message": "Created",
+  "data": {"name": "نام استان"}
+}</div>
+            <h4>خطاهای احتمالی:</h4>
+            <div class="code-block">{
+  "http_status": 406,
+  "data": "Name Must Be String and Atleaset 3 charcter"
+}</div>
+        </div>
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <div class="url">/api/v1/provinces</div>
+            <p>ویرایش نام استان (نیازمند توکن admin/president)</p>
+            <div class="code-block">{
+  "province_id": 1,
+  "name": "نام جدید استان"
+}</div>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">{
+  "http_status": 200,
+  "data": "Province Name With id 1 Change successfully to نام جدید استان"
+}</div>
+        </div>
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <div class="url">/api/v1/provinces?province_id=1</div>
+            <p>حذف استان و تمام شهرهای آن (نیازمند توکن admin/president)</p>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">{
+  "http_status": 200,
+  "data": "Province With id 1 And All sub cities deleted successfully."
+}</div>
+        </div>
+        <h3>شهرها (<code>/api/v1/cities</code>)</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <div class="url">/api/v1/cities</div>
+            <p>دریافت لیست تمام شهرها یا شهرهای یک استان خاص (پارامتر province_id اختیاری)</p>
+            <div class="code-block">curl -H "Authorization: Bearer &lt;token&gt;" http://api.local/api/v1/cities?province_id=1</div>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">[
+  {"id": 1, "province_id": 1, "name": "تبریز"},
+  ...
+]</div>
+        </div>
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <div class="url">/api/v1/cities</div>
+            <p>ایجاد شهر جدید (نیازمند توکن admin/president)</p>
+            <div class="code-block">{
+  "province_id": 1,
+  "name": "نام شهر"
+}</div>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">{
+  "http_status": 201,
+  "data": {"province_id": 1, "name": "نام شهر"}
+}</div>
+        </div>
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <div class="url">/api/v1/cities</div>
+            <p>ویرایش نام شهر (نیازمند توکن admin/president)</p>
+            <div class="code-block">{
+  "city_id": 1,
+  "name": "نام جدید شهر"
+}</div>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">{
+  "http_status": 200,
+  "data": "City Name With id 1 Change successfully to نام جدید شهر"
+}</div>
+        </div>
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <div class="url">/api/v1/cities?city_id=1</div>
+            <p>حذف شهر (نیازمند توکن admin/president)</p>
+            <h4>پاسخ موفق:</h4>
+            <div class="code-block">{
+  "http_status": 200,
+  "data": "City With id 1 deleted successfully."
+}</div>
+        </div>
+        <div class="note">
+            <b>نکته:</b> همه endpointها نیازمند ارسال توکن معتبر در هدر Authorization هستند.
+        </div>
+    </div>
+    <div class="section" id="validation">
+        <h2>✅ قوانین اعتبارسنجی</h2>
+        <p>
+            اعتبارسنجی داده‌های ورودی برای جلوگیری از ورود اطلاعات نامعتبر و حفظ یکپارچگی داده‌ها انجام می‌شود. پیام خطاها به صورت استاندارد و قابل فهم بازگردانده می‌شود.
+        </p>
+        <h3>اعتبارسنجی استان‌ها:</h3>
+        <table class="table">
+            <tr><th>فیلد</th><th>نوع</th><th>قوانین</th><th>پیام خطا</th></tr>
+            <tr><td>name</td><td>string</td><td>حداقل 3 کاراکتر، فقط حروف فارسی و انگلیسی، غیرتکراری</td><td>Name Must Be String and Atleaset 3 charcter</td></tr>
+            <tr><td>province_id</td><td>integer</td><td>بزرگتر از صفر، باید وجود داشته باشد</td><td>Province_id Must Be Number And Greater Than Zero</td></tr>
+        </table>
+        <h3>اعتبارسنجی شهرها:</h3>
+        <table class="table">
+            <tr><th>فیلد</th><th>نوع</th><th>قوانین</th><th>پیام خطا</th></tr>
+            <tr><td>name</td><td>string</td><td>حداقل 2 کاراکتر، فقط حروف فارسی و انگلیسی، غیرتکراری</td><td>Name Must Be String and Atleaset 2 charcter</td></tr>
+            <tr><td>province_id</td><td>integer</td><td>بزرگتر از صفر، باید وجود داشته باشد</td><td>Province id Must Be Number and Greater Than Zero</td></tr>
+            <tr><td>city_id</td><td>integer</td><td>بزرگتر از صفر، باید وجود داشته باشد</td><td>City_id Must Be Number And Greater Than Zero</td></tr>
+        </table>
+        <div class="warning">
+            <b>نکات مهم:</b>
+            <ul style="margin-top: 10px; margin-right: 20px;">
+                <li>نام‌ها نمی‌توانند تکراری باشند</li>
+                <li>شهرها باید به یک استان معتبر تعلق داشته باشند</li>
+                <li>حذف استان، تمام شهرهای آن را نیز حذف می‌کند</li>
+                <li>تمام ورودی‌ها از نظر امنیت پاکسازی می‌شوند</li>
+            </ul>
+        </div>
+    </div>
+    <div class="section" id="services">
+        <h2>🛠️ سرویس‌ها و منطق تجاری</h2>
+        <p>
+            منطق اصلی ارتباط با دیتابیس و پیاده‌سازی عملیات CRUD در کلاس‌های Service قرار دارد. این کلاس‌ها در پوشه <b>App/Services/</b> قرار دارند.
+        </p>
+        <table class="table">
+            <tr><th>کلاس</th><th>توضیح</th></tr>
+            <tr><td>BaseServices</td><td>کلاس پایه برای سرویس‌ها، شامل متدهای مشترک (isExist, getRow, deleteRow و ...)</td></tr>
+            <tr><td>ProvinceServices</td><td>مدیریت عملیات استان (دریافت لیست، ایجاد، ویرایش، حذف استان)</td></tr>
+            <tr><td>CityServices</td><td>مدیریت عملیات شهر (دریافت لیست، ایجاد، ویرایش، حذف شهر)</td></tr>
+        </table>
+        <h3>نمونه متدهای مهم:</h3>
+        <div class="code-block">
+// ProvinceServices.php
+public function getAll($where='')
+public function create($data)
+public function update($id, $name)
+
+// CityServices.php
+public function getAll($data = [])
+public function create($data)
+public function update($id, $name)
+public static function isCityExistByNameAndProvince($name, $province_id)
+        </div>
+        <div class="note">
+            <b>نکته:</b> تمام خطاهای دیتابیس و عملیات ناموفق در فایل لاگ ثبت می‌شوند و پیام مناسب به کاربر بازگردانده می‌شود.
+        </div>
+    </div>
+    <div class="section" id="utilities">
+        <h2>🧩 ابزارهای کمکی و کش</h2>
+        <p>
+            ابزارهای کمکی برای مدیریت کش، پاسخ‌دهی استاندارد و ثبت خطاها در پروژه استفاده می‌شوند. این ابزارها در پوشه <b>App/Utilities/</b> و <b>App/Libs/</b> قرار دارند.
+        </p>
+        <table class="table">
+            <tr><th>کلاس/فایل</th><th>توضیح</th></tr>
+            <tr><td>CacheUtility.php</td><td>مدیریت کش پاسخ‌های GET و بهبود سرعت پاسخ‌دهی</td></tr>
+            <tr><td>Response.php</td><td>ساختاردهی و ارسال پاسخ استاندارد JSON به کلاینت</td></tr>
+            <tr><td>FileHandling.php</td><td>ثبت خطاها و Exceptionها در فایل لاگ</td></tr>
+        </table>
+        <h3>نمونه استفاده از کش:</h3>
+        <div class="code-block">
+CacheUtility::start(); // شروع کش (در ابتدای endpoint)
+// ... اجرای منطق و خروجی
+CacheUtility::end();   // پایان کش و ذخیره خروجی
+        </div>
+        <h3>نمونه ساختار پاسخ استاندارد:</h3>
+        <div class="code-block">
+{
+  "http_status": 200,
+  "http_message": "OK",
+  "data": {...}
+}
+        </div>
+        <div class="note">
+            <b>نکته:</b> کش فقط برای درخواست‌های GET فعال است و با هر تغییر داده (POST/PUT/DELETE) کش پاک‌سازی می‌شود.
+        </div>
+    </div>
+    <div class="section" id="logging">
+        <h2>📝 لاگ‌گیری و مدیریت خطا</h2>
+        <p>
+            تمام خطاهای بحرانی و Exceptionها در پروژه ثبت و ذخیره می‌شوند تا عیب‌یابی و نگهداری سیستم ساده‌تر باشد. این کار توسط کلاس <b>FileHandling</b> انجام می‌شود و خروجی آن در فایل <b>App/Log/Exception.Log.txt</b> ذخیره می‌گردد.
+        </p>
+        <h3>نمونه ثبت خطا:</h3>
+        <div class="code-block">
+FileHandling::WriteErrorLog($message, $file, $line);
+        </div>
+        <h3>نمونه ساختار لاگ:</h3>
+        <div class="code-block">
+SQLSTATE[HY000]: General error: ... in File => App/Services/CityServices.php in line: 42 at June 1, 2024, 10:15 am
+        </div>
+        <div class="note">
+            <b>نکته:</b> ثبت لاگ به صورت خودکار در تمام سرویس‌ها و هنگام بروز خطا انجام می‌شود و اطلاعات کافی برای رفع مشکل را فراهم می‌کند.
+        </div>
+    </div>
+    <div class="section" id="examples">
+        <h2>💡 مثال‌های کاربردی</h2>
+        <p>در این بخش، نمونه‌هایی از درخواست‌های واقعی به API با استفاده از curl آورده شده است:</p>
+        <h3>دریافت تمام استان‌ها</h3>
+        <div class="code-block">curl -H "Authorization: Bearer &lt;token&gt;" http://api.local/api/v1/provinces</div>
+        <h3>ایجاد استان جدید</h3>
+        <div class="code-block">curl -X POST http://api.local/api/v1/provinces \
+     -H "Authorization: Bearer &lt;token&gt;" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "استان جدید"}'</div>
+        <h3>دریافت شهرهای یک استان</h3>
+        <div class="code-block">curl -H "Authorization: Bearer &lt;token&gt;" http://api.local/api/v1/cities?province_id=1</div>
+        <h3>ایجاد شهر جدید</h3>
+        <div class="code-block">curl -X POST http://api.local/api/v1/cities \
+     -H "Authorization: Bearer &lt;token&gt;" \
+     -H "Content-Type: application/json" \
+     -d '{"province_id": 1, "name": "شهر جدید"}'</div>
+        <h3>ویرایش نام استان</h3>
+        <div class="code-block">curl -X PUT http://api.local/api/v1/provinces \
+     -H "Authorization: Bearer &lt;token&gt;" \
+     -H "Content-Type: application/json" \
+     -d '{"province_id": 1, "name": "نام جدید استان"}'</div>
+        <h3>حذف شهر</h3>
+        <div class="code-block">curl -X DELETE http://api.local/api/v1/cities?city_id=1 \
+     -H "Authorization: Bearer &lt;token&gt;"</div>
+        <div class="success">
+            <b>نکات مهم برای استفاده:</b>
+            <ul style="margin-top: 10px; margin-right: 20px;">
+                <li>تمام درخواست‌های POST و PUT باید header Content-Type: application/json داشته باشند</li>
+                <li>برای درخواست‌های GET، پارامترها در URL قرار می‌گیرند</li>
+                <li>برای درخواست‌های DELETE، شناسه در URL قرار می‌گیرد</li>
+                <li>تمام پاسخ‌ها در فرمت JSON هستند</li>
+                <li>در صورت خطا، پیام مناسب در فیلد data قرار می‌گیرد</li>
+            </ul>
+        </div>
+    </div>
+    <div class="section" id="dev">
+        <h2>🛠️ نکات توسعه و نگهداری</h2>
+        <ul>
+            <li>کد پروژه ماژولار و قابل توسعه است؛ افزودن endpoint یا سرویس جدید به سادگی با الگوگیری از ساختار فعلی انجام می‌شود.</li>
+            <li>برای محیط عملیاتی، حتماً رمز عبور دیتابیس و کلید JWT را امن و غیرقابل حدس انتخاب کنید.</li>
+            <li>در صورت نیاز به افزودن احراز هویت پیشرفته‌تر، می‌توانید UserValidator را توسعه دهید.</li>
+            <li>برای بهبود کارایی، کش را فعال و مدت زمان آن را متناسب با نیاز تنظیم کنید.</li>
+            <li>در صورت بروز خطا، فایل لاگ را بررسی کنید تا علت مشکل را بیابید.</li>
+            <li>قبل از هر تغییر عمده، از دیتابیس و فایل‌های مهم بکاپ تهیه کنید.</li>
+            <li>برای تست API می‌توانید از ابزارهایی مانند Postman یا curl استفاده کنید.</li>
+        </ul>
+        <div class="note">
+            <b>نکته امنیتی:</b> هیچ‌گاه اطلاعات حساس (توکن، رمز عبور و ...) را در کد یا مستندات عمومی قرار ندهید.
+        </div>
+    </div>
+    <div class="section" id="support">
+        <h2>📞 پشتیبانی</h2>
+        <p>
+            برای گزارش مشکلات، درخواست ویژگی جدید یا دریافت راهنمایی بیشتر، می‌توانید با تیم توسعه تماس بگیرید:
+        </p>
+        <ul>
+            <li>ایمیل: <a href="mailto:abaschitsazi@gmail.com">abaschitsazi@gmail.com</a></li>
+        </ul>
+        <div class="note">
+            <b>آخرین به‌روزرسانی:</b> این مستندات بر اساس آخرین نسخه پروژه تهیه شده است.
+        </div>
+    </div>
+</div>
+</body>
+</html> 
