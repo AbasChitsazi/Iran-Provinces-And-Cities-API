@@ -2,7 +2,9 @@
 
 namespace App\Libs;
 
-
+if (!defined('Auth_Access')) {
+    die("Access Denied");
+}
 
 use App\Services\ProvinceServices;
 use App\Utilities\Response;

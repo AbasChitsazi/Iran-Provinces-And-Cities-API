@@ -7,8 +7,13 @@ use App\Services\ProvinceServices;
 use App\Services\CityServices;
 use App\Utilities\Response;
 use App\Utilities\CacheUtility;
+use App\Libs\UserValidator;
 
-
+$token = UserValidator::getBearerToken();
+if (!$token || !UserValidator::decodeApiKey($token)) {
+    Response::RespondeAndDie('Unauthorized, Invalid Token', Response::HTTP_UNAUTHORIZED);
+}
+$user = UserValidator::decodeApiKey($token);
 
 $request_method = $_SERVER['REQUEST_METHOD'];
 
@@ -21,7 +26,20 @@ $cityservice = new CityServices();
 switch ($request_method) {
     case 'GET':
         CacheUtility::start();
+        if(!UserValidator::hasPrivilage($user)){
+            $province = $user->allowed_province;
+            $province = implode(',',$province);
+            $where = "WHERE id IN({$province})";
+            $response = $provinceservice->getAll($where);
+            if (empty($response)) {
+                Response::RespondeAndDie('', Response::HTTP_NOT_FOUND);
+            }
+            echo Response::responde($response, Response::HTTP_OK);
+            CacheUtility::end();
+            break;
+        }
         $response = $provinceservice->getAll();
+
         if (empty($response)) {
             Response::RespondeAndDie('', Response::HTTP_NOT_FOUND);
         }
@@ -29,6 +47,9 @@ switch ($request_method) {
         CacheUtility::end();
         break;
     case 'POST':
+        if(!UserValidator::hasPrivilage($user)){
+            Response::RespondeAndDie("User {$user->username} has No Access to ADD City",Response::HTTP_FORBIDDEN );
+        }
         if (!ProvinceValidator::validateProvinceForCreate($request_body)) {
             Response::RespondeAndDie(ProvinceValidator::getMessage(), ProvinceValidator::getStatusCode());
         }
@@ -45,6 +66,9 @@ switch ($request_method) {
         }
         break;
     case 'DELETE':
+        if(!UserValidator::hasPrivilage($user)){
+            Response::RespondeAndDie("User {$user->username} has No Access to DELETE City",Response::HTTP_FORBIDDEN );
+        }
         $province_id = $_GET['province_id'] ?? null;
         $request_data = [
             'province_id' => $province_id

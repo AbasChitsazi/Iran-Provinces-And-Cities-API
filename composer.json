@@ -1,0 +1,12 @@
+{
+    "name": "asus/api.local",
+    "authors": [
+        {
+            "name": "Abbas Chitsazi",
+            "email": "abaschitsazii@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.11"
+    }
+}

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
-
+if (!defined('Auth_Access')) {
+    die("Access Denied");
+}
 
 use App\Utilities\Response;
 use App\Libs\FileHandling;

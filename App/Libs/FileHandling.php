@@ -2,6 +2,9 @@
 
 namespace App\Libs;
 date_default_timezone_set("Asia/Tehran");
+if (!defined('Auth_Access')) {
+    die("Access Denied");
+}
 class FileHandling
 {
     public static function WriteErrorLog($message, $file, $line)

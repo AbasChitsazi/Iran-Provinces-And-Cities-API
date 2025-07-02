@@ -14,10 +14,10 @@ class ProvinceServices extends BaseServices
 {
     protected static $table = 'province';
 
-    public  function getAll()
+    public  function getAll($where='')
     {
         $pdo = self::db();
-        $sql = "SELECT * FROM  ". self::$table ." ";
+        $sql = "SELECT * FROM  ". self::$table ." $where ";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll($pdo::FETCH_OBJ);
@@ -54,11 +54,11 @@ class ProvinceServices extends BaseServices
     {
         try {
             $pdo = self::db();
-            $sql = "SELECT *  FROM  ". CityServices::$table ."  WHERE province_id = ? ORDER BY id ASC LIMIT 1";
+            $sql = "SELECT *  FROM  city   WHERE province_id = ? ORDER BY id ASC LIMIT 1";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return $stmt->fetch($pdo::FETCH_OBJ);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             FileHandling::WriteErrorLog($e->getMessage(), __FILE__, __LINE__);
             Response::RespondeAndDie("Plaese Contact Administrator", Response::HTTP_INTERNAL_SERVER_ERROR);
         }

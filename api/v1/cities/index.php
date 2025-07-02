@@ -7,10 +7,15 @@ include_once __DIR__ . "/../../../loader.php";
 use App\Services\CityServices;
 use App\Utilities\Response;
 use App\Libs\CityValidator;
+use App\Libs\UserValidator;
 use App\Utilities\CacheUtility;
 
 
-
+$token = UserValidator::getBearerToken();
+if (!$token || !UserValidator::decodeApiKey($token)) {
+    Response::RespondeAndDie('Unauthorized, Invalid Token', Response::HTTP_UNAUTHORIZED);
+}
+$user = UserValidator::decodeApiKey($token);
 
 
 $Response = new Response();
@@ -36,7 +41,9 @@ switch ($request_method) {
         if (!CityValidator::isValidParameter($request_data)) {
             Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
         }
-
+        if(!UserValidator::hasAccess($user,$request_data['province_id'])){
+            Response::RespondeAndDie("User {$user->username} has No Access to This Province",Response::HTTP_FORBIDDEN );
+        }
         $response = $cityServices->getAll($request_data);
 
         if (empty($response))
@@ -46,6 +53,9 @@ switch ($request_method) {
         CacheUtility::end();
         break;
     case 'POST':
+        if(!UserValidator::hasPrivilage($user)){
+            Response::RespondeAndDie("User {$user->username} has No Access to add City",Response::HTTP_FORBIDDEN );
+        }
         if (!CityValidator::validateCityData($request_body))
             Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
 
@@ -56,6 +66,9 @@ switch ($request_method) {
 
         break;
     case 'DELETE':
+        if(!UserValidator::hasPrivilage($user)){
+            Response::RespondeAndDie("User {$user->username} has No Access to Delete city",Response::HTTP_FORBIDDEN );
+        }
         $city_id = $_GET['city_id'] ?? null;
         $request_data = [
             'city_id' => $city_id
@@ -73,6 +86,9 @@ switch ($request_method) {
         }
         break;
     case 'PUT':
+        if(!UserValidator::hasPrivilage($user)){
+            Response::RespondeAndDie("User {$user->username} has No Access to Update city",Response::HTTP_FORBIDDEN );
+        }
         if (!CityValidator::validationForUpdateCity($request_body)) {
             Response::RespondeAndDie(CityValidator::getMessage(), CityValidator::getStatusCode());
         }

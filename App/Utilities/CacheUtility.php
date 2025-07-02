@@ -11,7 +11,7 @@ class CacheUtility
 {
     protected static $cache_file;
     protected static $cache_enabled = CACHE_ENABLED;
-    const EXPIRE_TIME = 3;
+    const EXPIRE_TIME = 1;
 
     public static function init()
     {
